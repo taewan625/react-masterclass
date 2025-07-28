@@ -10,13 +10,16 @@ const rotationAni = keyframes`
     border-radius: 0;
   }
   50% {
-    transform:rotate(180deg);
-    border-radius: 50%;
+    border-radius: 100px;
   }
   100% {
     transform:rotate(360deg);
     border-radius: 0;
   }
+`;
+
+const Emoji = styled.span`
+  font-size: 50px;
 `;
 
 const Box = styled.div`
@@ -27,12 +30,8 @@ const Box = styled.div`
   width: 100px;
   background-color: tomato;
   animation: ${rotationAni} 1s linear infinite;
-  .asdf,
-  span {
-    font-size: 50px;
-    &:hover {
-      color: white;
-    }
+  ${Emoji}:hover {
+    color: white;
   }
 `;
 
@@ -40,9 +39,9 @@ function App() {
   return (
     <Wrapper>
       <Box>
-        <span>123</span>
-        <span className="asdf">123</span>
+        <Emoji as="p">123</Emoji>
       </Box>
+      <Emoji as="p">asdf</Emoji>
     </Wrapper>
   );
 }
