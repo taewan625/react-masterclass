@@ -1,36 +1,49 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 
-//styled-components 사용법.
-const Father = styled.div`
+const Wrapper = styled.div`
   display: flex;
 `;
 
-const Btn = styled.button`
-  color: white;
-  background-color: tomato;
-  border: 0;
-  border-radius: 15px;
+const rotationAni = keyframes`
+  0% {
+    transform:rotate(0deg);
+    border-radius: 0;
+  }
+  50% {
+    transform:rotate(180deg);
+    border-radius: 50%;
+  }
+  100% {
+    transform:rotate(360deg);
+    border-radius: 0;
+  }
 `;
 
-//이건 잘 안씀
-const Input = styled.input.attrs({
-  required: true,
-})`
+const Box = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px;
+  width: 100px;
   background-color: tomato;
+  animation: ${rotationAni} 1s linear infinite;
+  .asdf,
+  span {
+    font-size: 50px;
+    &:hover {
+      color: white;
+    }
+  }
 `;
 
 function App() {
   return (
-    <Father as="header">
-      {/* as를 통해서 tag를 변경 가능함. */}
-      <Btn as="a" href="/">
-        Log In
-      </Btn>
-      <Input />
-      <Input />
-      <Input />
-      <Input />
-    </Father>
+    <Wrapper>
+      <Box>
+        <span>123</span>
+        <span className="asdf">123</span>
+      </Box>
+    </Wrapper>
   );
 }
 
