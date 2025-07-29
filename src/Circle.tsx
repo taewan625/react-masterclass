@@ -1,9 +1,9 @@
+import { useState } from "react";
 import styled from "styled-components";
 
 interface CircleProps {
   bgColor: string;
-  borderColor?: string; //optional
-  text?: string;
+  borderColor?: string;
 }
 
 const Container = styled.div<CircleProps>`
@@ -15,11 +15,17 @@ const Container = styled.div<CircleProps>`
 `;
 
 //default 값 세팅 방법 1
-function Circle({ bgColor, borderColor, text = "hello" }: CircleProps) {
+function Circle({ bgColor, borderColor }: CircleProps) {
+  //state에 type 지정하는 방법
+  const [counter, setCounter] = useState<number>(1); // 여러개도 가능 <number | string>
+
+  const handleCounter = () => {
+    setCounter(counter + 1);
+  };
+
   return (
-    //default 값 세팅 방법 2: ??
-    <Container bgColor={bgColor} borderColor={borderColor ?? bgColor}>
-      {text}
+    <Container bgColor={bgColor} borderColor={borderColor ?? bgColor} onClick={handleCounter}>
+      {counter}
     </Container>
   );
 }
