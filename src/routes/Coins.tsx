@@ -25,7 +25,9 @@ const Coin = styled.li`
   border-radius: 15px;
   a {
     transition: color 0.2s ease-in-out;
-    display: block;
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
 
   &:hover {
@@ -40,9 +42,13 @@ const Title = styled.h1`
   color: ${(props) => props.theme.accentColor};
 `;
 
-const Loader = styled.span`
+const Loader = styled.div`
   text-align: center;
-  color: ${(props) => props.theme.accentColor};
+`;
+
+const Img = styled.img`
+  width: 25px;
+  height: 25px;
 `;
 
 interface CoinInterface {
@@ -60,11 +66,6 @@ function Coins() {
   const [coins, setCoins] = useState<CoinInterface[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
 
-  //useEffect: component 시점 선택 가능 2nd params로 조절
-  //조건 종류
-  // 1) []: 처음 마운트될 때 1번만
-  // 2) [a, b]: a, b 값이 변경될때마다 변경
-  // 3) 없음: 렌더링마다 매번 실행
   useEffect(() => {
     (async () => {
       const response = await fetch("https://api.coinpaprika.com/v1/coins"); //api응답 기다림
@@ -80,13 +81,21 @@ function Coins() {
         <Title>코인</Title>
       </Header>
       {loading ? (
-        <Loader />
+        <Loader>Loading...</Loader>
       ) : (
         <CoinList>
           {coins.map((coin) => (
             <Coin key={coin.id}>
-              {/* a tag는 새로고침이 있어서 Link를 사용 */}
-              <Link to={`/${coin.id}`}>{coin.name} &rarr;</Link>
+              {/* react-dom Link에서 state라는 property를 사용하여 화면 전환 시, 데이터를 전달할 수 있다. */}
+              <Link
+                to={{
+                  pathname: `/${coin.id}`,
+                  state: { name: coin.name },
+                }}
+              >
+                <Img src={`https://cryptoicon-api.pages.dev/icons/128/color/${coin.symbol.toLowerCase()}.png`}></Img>
+                {coin.name} &rarr;
+              </Link>
             </Coin>
           ))}
         </CoinList>
