@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Route, Switch, useLocation, useParams } from "react-router-dom";
+import { Link, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
 import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
@@ -48,6 +48,28 @@ const OverviewItem = styled.div`
 `;
 const Description = styled.p`
   margin: 20px 0px;
+`;
+
+const Tabs = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  margin: 25px 0px;
+  gap: 10px;
+`;
+
+//Tab의 props를 받아서 isActive 값 설정
+const Tab = styled.span<{ isActive: boolean }>`
+  text-align: center;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: 400;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 7px 0px;
+  border-radius: 10px;
+  color: ${(props) => (props.isActive ? props.theme.accentColor : props.theme.textColor)};
+  a {
+    display: block;
+  }
 `;
 
 interface RouteParams {
@@ -121,6 +143,7 @@ interface PriceData {
 }
 
 function Coin() {
+  //Route path의 pathParams 정보를 가짐
   const { coinId } = useParams<RouteParams>();
   //home의 link의 state로 부터 값을 받아올 때 useLocation hook을 이용
   const { state } = useLocation<RouteState>();
@@ -128,6 +151,10 @@ function Coin() {
   const [info, setInfo] = useState<InfoData>();
   const [priceInfo, setPriceInfo] = useState<PriceData>();
   const [loading, setLoading] = useState<boolean>(true);
+
+  //useRouterMath: 내가 특정한 url에 있는지 확인해주는 hook
+  const priceMatch = useRouteMatch("/:coinId/price");
+  const chartMatch = useRouteMatch("/:coinId/chart");
 
   useEffect(() => {
     (async () => {
@@ -174,6 +201,15 @@ function Coin() {
               <span>{priceInfo?.max_supply}</span>
             </OverviewItem>
           </Overview>
+          <Tabs>
+            <Tab isActive={chartMatch !== null}>
+              <Link to={`/${coinId}/chart`}>Chart</Link>
+            </Tab>
+            <Tab isActive={priceMatch !== null}>
+              <Link to={`/${coinId}/price`}>Price</Link>
+            </Tab>
+          </Tabs>
+
           {/* nested router: router 안에 router 넣기. 예시) tab 같은 구조에서 많이 사용 */}
           <Switch>
             <Route path={`/${coinId}/price`}>
