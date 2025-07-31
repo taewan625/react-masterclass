@@ -1,6 +1,7 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { fetchCoins } from "../api";
+import { useQuery } from "@tanstack/react-query";
 
 const Container = styled.div`
   padding: 0 10px;
@@ -51,7 +52,7 @@ const Img = styled.img`
   height: 25px;
 `;
 
-interface CoinInterface {
+interface ICoin {
   id: string;
   name: string;
   symbol: string;
@@ -62,29 +63,36 @@ interface CoinInterface {
 }
 
 function Coins() {
-  // step 1
-  const [coins, setCoins] = useState<CoinInterface[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
+  /**
+    const [coins, setCoins] = useState<ICoin[]>([]);
+    const [loading, setLoading] = useState<boolean>(true);
+  
+    useEffect(() => {
+      (async () => {
+        const response = await fetch("https://api.coinpaprika.com/v1/coins"); //api응답 기다림
+        const json = await response.json(); //해당 응답의 body 추출 body 추출 작업 자체가 비동기 작업
+        setCoins(json.slice(0, 100));
+        setLoading(false);
+      })();
+    }, []);
+  */
 
-  useEffect(() => {
-    (async () => {
-      const response = await fetch("https://api.coinpaprika.com/v1/coins"); //api응답 기다림
-      const json = await response.json(); //해당 응답의 body 추출 body 추출 작업 자체가 비동기 작업
-      setCoins(json.slice(0, 100));
-      setLoading(false);
-    })();
-  }, []);
+  //1. api 통신 상태 (= server 상태)를 효율적이고 자동으로 관리해주는 라이브러리 - 캐싱 기능도 가짐
+  const { isLoading, data } = useQuery<ICoin[]>({
+    queryKey: ["allCoins"], //고유 key
+    queryFn: fetchCoins, //api 함수
+  });
 
   return (
     <Container>
       <Header>
         <Title>코인</Title>
       </Header>
-      {loading ? (
+      {isLoading ? (
         <Loader>Loading...</Loader>
       ) : (
         <CoinList>
-          {coins.map((coin) => (
+          {data?.map((coin) => (
             <Coin key={coin.id}>
               {/* react-dom Link에서 state라는 property를 사용하여 화면 전환 시, 데이터를 전달할 수 있다. */}
               <Link
