@@ -7,14 +7,14 @@ interface charProps {
 }
 
 interface Ihistorical {
-  close: number;
-  high: number;
+  close: string;
+  high: string;
   low: string;
-  market_cap: string;
+  market_cap: number;
   open: string;
-  time_close: string;
-  time_open: string;
-  volume: number;
+  time_close: number;
+  time_open: number;
+  volume: string;
 }
 
 function Chart({ coinId }: charProps) {
@@ -22,6 +22,8 @@ function Chart({ coinId }: charProps) {
     queryKey: ["chart", coinId],
     queryFn: () => fetchCoinHistory(coinId),
   });
+
+  console.log(data);
 
   return (
     <div>
@@ -33,7 +35,7 @@ function Chart({ coinId }: charProps) {
           series={[
             {
               name: "price",
-              data: data?.map((price) => price.close) ?? [],
+              data: data?.map((price) => Number(price.close)) ?? [],
             },
           ]}
           options={{
@@ -47,7 +49,18 @@ function Chart({ coinId }: charProps) {
             grid: { show: false },
             stroke: { curve: "smooth", width: 3 },
             yaxis: { show: false },
-            xaxis: { labels: { show: false }, axisTicks: { show: false } },
+            xaxis: {
+              labels: { show: false },
+              axisTicks: { show: false },
+              type: "datetime",
+              categories: data?.map((price) => price.time_close) ?? [],
+            },
+            fill: {
+              type: "gradient",
+              gradient: { gradientToColors: ["red"], stops: [0, 100] },
+            },
+            colors: ["blue"],
+            tooltip: { y: { formatter: (value) => `$${value.toFixed(2)}` } },
           }}
         />
       )}
