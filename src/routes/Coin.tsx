@@ -152,7 +152,7 @@ interface PriceData {
 }
 
 function Coin() {
-  //Route path의 pathParams 정보를 가짐
+  //Route path(`:pathParam` 구조여야 params로 담김)의 pathParams 정보를 가짐
   const { coinId } = useParams<RouteParams>();
   //home의 link의 state로 부터 값을 받아올 때 useLocation hook을 이용
   const { state } = useLocation<RouteState>();
@@ -232,13 +232,15 @@ function Coin() {
             </Tab>
           </Tabs>
 
-          {/* nested router: router 안에 router 넣기. 예시) tab 같은 구조에서 많이 사용 */}
+          {/* nested router: router 안에 router 넣기. 예시) tab 같은 구조에서 많이 사용 
+            `:coinId` 구조여야지 useParams 사용가능
+          */}
           <Switch>
-            <Route path={`/${coinId}/price`}>
+            <Route path={`:coinId/price`}>
               <Price />
             </Route>
-            <Route path={`/${coinId}/chart`}>
-              <Chart />
+            <Route path={`/:coinId/chart`}>
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>
