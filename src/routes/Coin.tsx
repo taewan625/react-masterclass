@@ -11,6 +11,7 @@ import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
+import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0 10px;
@@ -180,14 +181,20 @@ function Coin() {
     queryFn: () => fetchCoinInfo(coinId),
   });
   const { isLoading: tickerLoading, data: tickerData } = useQuery<PriceData>({
-    queryKey: ["tickers", coinId],
-    queryFn: () => fetchCoinTickers(coinId),
+    queryKey: ["tickers", coinId], //pk
+    queryFn: () => fetchCoinTickers(coinId), //데이터 조회 함수
+    refetchInterval: 500000, //자동 재조회
   });
 
   const loading = infoLoading || tickerLoading;
 
   return (
     <Container>
+      <Helmet>
+        <title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </title>
+      </Helmet>
       <Header>
         {/* 값을 외부에서 받을 경우 ?.을 사용하는 습관이 있음 */}
         <Title>
@@ -208,8 +215,8 @@ function Coin() {
               <span>${infoData?.symbol}</span>
             </OverviewItem>
             <OverviewItem>
-              <span>Open Source:</span>
-              <span>{infoData?.open_source ? "Yes" : "No"}</span>
+              <span>Price:</span>
+              <span>{tickerData?.quotes.USD.price.toFixed(3)}</span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
