@@ -1,4 +1,11 @@
-import { Link, Route, Switch, useLocation, useParams, useRouteMatch } from "react-router-dom";
+import {
+  Link,
+  Route,
+  Switch,
+  useLocation,
+  useParams,
+  useRouteMatch,
+} from "react-router-dom";
 import styled from "styled-components";
 import Price from "./Price";
 import Chart from "./Chart";
@@ -67,7 +74,8 @@ const Tab = styled.span<{ isActive: boolean }>`
   background-color: rgba(0, 0, 0, 0.5);
   padding: 7px 0px;
   border-radius: 10px;
-  color: ${(props) => (props.isActive ? props.theme.accentColor : props.theme.textColor)};
+  color: ${(props) =>
+    props.isActive ? props.theme.accentColor : props.theme.textColor};
   a {
     display: block;
   }
@@ -167,8 +175,14 @@ function Coin() {
   //   })();
   // }, [coinId]);
 
-  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>({ queryKey: ["info", coinId], queryFn: () => fetchCoinInfo(coinId) });
-  const { isLoading: tickerLoading, data: tickerData } = useQuery<PriceData>({ queryKey: ["tickers", coinId], queryFn: () => fetchCoinTickers(coinId) });
+  const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>({
+    queryKey: ["info", coinId],
+    queryFn: () => fetchCoinInfo(coinId),
+  });
+  const { isLoading: tickerLoading, data: tickerData } = useQuery<PriceData>({
+    queryKey: ["tickers", coinId],
+    queryFn: () => fetchCoinTickers(coinId),
+  });
 
   const loading = infoLoading || tickerLoading;
 
@@ -176,7 +190,9 @@ function Coin() {
     <Container>
       <Header>
         {/* 값을 외부에서 받을 경우 ?.을 사용하는 습관이 있음 */}
-        <Title> {state?.name ? state.name : loading ? "Loading..." : infoData?.name}</Title>
+        <Title>
+          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
+        </Title>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
