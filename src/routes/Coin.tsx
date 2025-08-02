@@ -21,7 +21,7 @@ const Container = styled.div`
 
 const Header = styled.header`
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
   padding: 10px 0;
 `;
@@ -200,6 +200,9 @@ function Coin() {
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
+        {/* Link: 단순 URL 이동, Route: 실제 이동한 경로랑 매핑된 거 렌더링
+        ps) switch 없으면 매핑된 url router 모두 렌더링 있으면 1st만 렌더링  */}
+        <Link to={"/"}>home</Link>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
@@ -243,7 +246,7 @@ function Coin() {
             `:coinId` 구조여야지 useParams 사용가능
           */}
           <Switch>
-            <Route path={`:coinId/price`}>
+            <Route path={`/:coinId/price`}>
               <Price />
             </Route>
             <Route path={`/:coinId/chart`}>

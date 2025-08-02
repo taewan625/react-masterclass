@@ -24,8 +24,6 @@ function Chart({ coinId }: charProps) {
     refetchInterval: 10000,
   });
 
-  console.log(data);
-
   return (
     <div>
       {isLoading ? (
