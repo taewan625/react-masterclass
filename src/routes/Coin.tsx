@@ -152,11 +152,9 @@ interface PriceData {
   };
 }
 
-interface ICoinProps {
-  isDark: boolean;
-}
+interface ICoinProps {}
 
-function Coin({ isDark }: ICoinProps) {
+function Coin() {
   //Route path(`:pathParam` 구조여야 params로 담김)의 pathParams 정보를 가짐
   const { coinId } = useParams<RouteParams>();
   //home의 link의 state로 부터 값을 받아올 때 useLocation hook을 이용
@@ -254,7 +252,7 @@ function Coin({ isDark }: ICoinProps) {
               <Price />
             </Route>
             <Route path={`/:coinId/chart`}>
-              <Chart isDark={isDark} coinId={coinId} />
+              <Chart coinId={coinId} />
             </Route>
           </Switch>
         </>

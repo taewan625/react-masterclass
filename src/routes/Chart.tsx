@@ -1,10 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinHistory } from "../api";
 import ApexChart from "react-apexcharts";
+import { useAtom } from "jotai";
+import { isDarkAtom } from "../atom";
 
 interface charProps {
   coinId: string;
-  isDark: boolean;
 }
 
 interface Ihistorical {
@@ -18,7 +19,9 @@ interface Ihistorical {
   volume: string;
 }
 
-function Chart({ isDark, coinId }: charProps) {
+function Chart({ coinId }: charProps) {
+  const [isDark] = useAtom(isDarkAtom);
+
   const { isLoading, data } = useQuery<Ihistorical[]>({
     queryKey: ["chart", coinId],
     queryFn: () => fetchCoinHistory(coinId),
