@@ -1,3 +1,4 @@
+import { error } from "console";
 import { useForm } from "react-hook-form";
 
 interface IForm {
@@ -37,6 +38,7 @@ function ToDoList() {
     handleSubmit, //form에서 사용하는 함수
     formState: { errors }, //에러 정보로 에러 문구 표출
     setError, //form 제출 직전 최종 에러 점검
+    reset, //제출 후 값 비우기
   } = useForm<IForm>({
     defaultValues: {
       email: "@naver.com",
@@ -49,11 +51,14 @@ function ToDoList() {
       setError("password1", { message: "pw are not the same" });
     }
 
+    reset();
+
     //만약 api 통신 시, 서버측 에러로 오류가 생기는 경우 아래처럼 setError 세팅하여 사용 가능
     //setError("extraError", { message: "server offline" });
-
     console.log(data);
   };
+
+  console.log(errors);
 
   return (
     <div>
@@ -79,7 +84,7 @@ function ToDoList() {
             required: "write here",
             //custom validation
             validate: (value) =>
-              value.includes("taewan") && "no taewan allowed",
+              value.includes("taewan") ? "no taewan allowed" : true,
           })}
           placeholder="First Name"
         />
