@@ -1,9 +1,5 @@
-import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { darkTheme, lightTheme } from "./theme";
-import Router from "./Router";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
-import { isDarkAtom } from "./atom";
-import { useAtom } from "jotai";
+import { createGlobalStyle } from "styled-components";
+import ToDoList from "./TodoList";
 
 const GlobalStyle = createGlobalStyle`
   html, body, div, span, applet, object, iframe,
@@ -68,15 +64,10 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
-  const [isDark] = useAtom(isDarkAtom);
-
   return (
     <>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <GlobalStyle />
-        <Router />
-        <ReactQueryDevtools initialIsOpen={true} />
-      </ThemeProvider>
+      <GlobalStyle />
+      <ToDoList />
     </>
   );
 }
