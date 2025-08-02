@@ -8,6 +8,8 @@ interface IForm {
   password: string;
   password1: string;
   memo?: string; //비필수 일 경우
+
+  extraError?: string;
 }
 
 function ToDoList() {
@@ -31,16 +33,25 @@ function ToDoList() {
   //register: onChange, value 세팅할 필요 없음
   //watch: 값의 변화를 보는 함수
   const {
-    register,
-    handleSubmit,
-    formState: { errors },
+    register, //각 input의 유효성 조건 거는 함수  1.기본 required 2. pattern 3.custom validate
+    handleSubmit, //form에서 사용하는 함수
+    formState: { errors }, //에러 정보로 에러 문구 표출
+    setError, //form 제출 직전 최종 에러 점검
   } = useForm<IForm>({
     defaultValues: {
       email: "@naver.com",
     },
   });
 
-  const onValid = (data: any) => {
+  //최종 유효성 검사
+  const onValid = (data: IForm) => {
+    if (data.password !== data.password1) {
+      setError("password1", { message: "pw are not the same" });
+    }
+
+    //만약 api 통신 시, 서버측 에러로 오류가 생기는 경우 아래처럼 setError 세팅하여 사용 가능
+    //setError("extraError", { message: "server offline" });
+
     console.log(data);
   };
 
@@ -64,7 +75,12 @@ function ToDoList() {
         <span>{errors?.email?.message}</span>
 
         <input
-          {...register("firstName", { required: "write here" })}
+          {...register("firstName", {
+            required: "write here",
+            //custom validation
+            validate: (value) =>
+              value.includes("taewan") && "no taewan allowed",
+          })}
           placeholder="First Name"
         />
         <span>{errors?.firstName?.message}</span>
@@ -102,6 +118,7 @@ function ToDoList() {
         <input {...register("memo")} placeholder="memo" />
 
         <button>Add</button>
+        <span>{errors?.extraError?.message}</span>
       </form>
     </div>
   );
