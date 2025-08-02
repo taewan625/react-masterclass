@@ -4,6 +4,7 @@ import ApexChart from "react-apexcharts";
 
 interface charProps {
   coinId: string;
+  isDark: boolean;
 }
 
 interface Ihistorical {
@@ -17,7 +18,7 @@ interface Ihistorical {
   volume: string;
 }
 
-function Chart({ coinId }: charProps) {
+function Chart({ isDark, coinId }: charProps) {
   const { isLoading, data } = useQuery<Ihistorical[]>({
     queryKey: ["chart", coinId],
     queryFn: () => fetchCoinHistory(coinId),
@@ -38,7 +39,7 @@ function Chart({ coinId }: charProps) {
             },
           ]}
           options={{
-            theme: { mode: "dark" },
+            theme: { mode: isDark ? "dark" : "light" },
             chart: {
               height: 500,
               width: 500,
