@@ -2,6 +2,8 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { fetchCoins } from "../api";
 import { useQuery } from "@tanstack/react-query";
+import { useSetAtom } from "jotai";
+import { isDarkAtom } from "../atom";
 
 const Container = styled.div`
   padding: 0 10px;
@@ -63,8 +65,6 @@ interface ICoin {
   type: string;
 }
 
-interface ICoinsProps {}
-
 function Coins() {
   /**
     const [coins, setCoins] = useState<ICoin[]>([]);
@@ -80,6 +80,10 @@ function Coins() {
     }, []);
   */
 
+  //atom setting 방법
+  const setDarkAtom = useSetAtom(isDarkAtom);
+  const toggleDarkAtom = () => setDarkAtom((prev) => !prev);
+
   //1. api 통신 상태 (= server 상태)를 효율적이고 자동으로 관리해주는 라이브러리 - 캐싱 기능도 가짐
   const { isLoading, data } = useQuery<ICoin[]>({
     queryKey: ["allCoins"], //고유 key
@@ -90,7 +94,7 @@ function Coins() {
     <Container>
       <Header>
         <Title>코인</Title>
-        <button>toggle dark</button>
+        <button onClick={toggleDarkAtom}>toggle mode</button>
       </Header>
       {isLoading ? (
         <Loader>Loading...</Loader>
