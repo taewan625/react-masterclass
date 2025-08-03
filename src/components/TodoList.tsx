@@ -1,50 +1,31 @@
-import { useForm } from "react-hook-form";
-import { atom, useAtom, useSetAtom } from "jotai";
-
-interface IForm {
-  toDo: string;
-}
-
-interface IToDo {
-  id: number;
-  text: string;
-  //string에서 특정 문자열만 가능하도록 제약
-  category: "TODO" | "ING" | "DONE";
-}
-
-//상태 정의
-const toDoState = atom<IToDo[]>([]);
+import { useAtomValue } from "jotai";
+import { toDoState } from "../atoms";
+import CreateToDo from "./CreateToDo";
+import ToDo from "./ToDo";
 
 function ToDoList() {
+  /* jotai atom function 정리
+  //초기화
+  const atomPkName = atom<interface>(initvalue);
+  
   //get & set
-  const [toDos, setToDos] = useAtom(toDoState);
+  const [value, setFn] = useAtom(); 
+  
+  //get, set 분리
+  const value = useAtomValue(atomPkName);
+  cosnt setFn = useSetAtom(atomPkName);
+  */
 
-  const { register, handleSubmit, setValue } = useForm<IForm>();
-
-  const handleValid = ({ toDo }: IForm) => {
-    setToDos((oldToDos) => [
-      { id: Date.now(), text: toDo, category: "TODO" },
-      ...oldToDos,
-    ]);
-    setValue("toDo", "");
-  };
+  const toDos = useAtomValue(toDoState);
 
   return (
     <div>
       <h1>To Dos</h1>
       <hr />
-      <form onSubmit={handleSubmit(handleValid)}>
-        <input
-          {...register("toDo", {
-            required: "Please wrtie a To Do",
-          })}
-          placeholder="Write a to do"
-        />
-        <button>Add</button>
-      </form>
+      <CreateToDo />
       <ul>
-        {toDos.map((todo) => (
-          <li key={todo.id}> {todo.text}</li>
+        {toDos.map((toDo) => (
+          <ToDo key={toDo.id} {...toDo} />
         ))}
       </ul>
     </div>
