@@ -1,14 +1,35 @@
 import { useSetAtom } from "jotai";
-import { Categories, IToDo, toDoState } from "../atoms";
+import { Categories, IToDo, SessionStorage, toDoState } from "../atoms";
 
 function ToDo({ id, text, category }: IToDo) {
   const setToDos = useSetAtom(toDoState);
 
+  //카테고리 update
+  const updateToDo = (toDos: IToDo[], name: Categories) => {
+    return toDos.map((toDo) =>
+      toDo.id === id ? { ...toDo, category: name } : toDo
+    );
+  };
+
+  //todo 삭제
+  const deleteToDo = (toDos: IToDo[]) => {
+    return toDos.filter((toDo) => toDo.id !== id);
+  };
+
+  //storage 저장
+  const setSessionStorage = (toDos: IToDo[]) => {
+    sessionStorage.setItem(SessionStorage.TODO_DATA, JSON.stringify(toDos));
+  };
+
   const onClick = (name: Categories) => {
-    setToDos((oldToDos) => {
-      return oldToDos.map((oldToDo: IToDo) =>
-        oldToDo.id === id ? { ...oldToDo, category: name } : oldToDo
-      );
+    setToDos((toDos) => {
+      const result =
+        Categories.DELETE === name
+          ? deleteToDo(toDos)
+          : updateToDo(toDos, name);
+
+      setSessionStorage(result);
+      return result;
     });
   };
 
@@ -24,6 +45,7 @@ function ToDo({ id, text, category }: IToDo) {
       {category !== Categories.DONE && (
         <button onClick={() => onClick(Categories.DONE)}>Done</button>
       )}
+      <button onClick={() => onClick(Categories.DELETE)}>X</button>
     </li>
   );
 }

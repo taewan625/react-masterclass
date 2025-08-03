@@ -1,13 +1,17 @@
 import { atom } from "jotai";
 
+export enum SessionStorage {
+  "TODO_DATA" = "TODO_DATA",
+}
+
 //type Categories = "DOING" | "TO_DO" | "DONE";
 
 //type 보다 더 명확함. defaul value = number index
 export enum Categories {
-  "TO_DO", //0
-  "DOING", //1
-  "DONE", //2
-  "CHANGE_VALUE" = "NOT_NUMBER",
+  "TO_DO" = "TO_DO",
+  "DOING" = "DOING",
+  "DONE" = "DONE",
+  "DELETE" = "DELETE",
 }
 
 export interface IToDo {

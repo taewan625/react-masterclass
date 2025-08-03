@@ -1,7 +1,15 @@
-import { useAtom, useAtomValue } from "jotai";
-import { Categories, categoryState, toDoSelector } from "../atoms";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import {
+  Categories,
+  categoryState,
+  IToDo,
+  SessionStorage,
+  toDoSelector,
+  toDoState,
+} from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
+import { useEffect } from "react";
 
 function ToDoList() {
   /* jotai atom function 정리
@@ -15,12 +23,19 @@ function ToDoList() {
   const value = useAtomValue(atomPkName);
   cosnt setFn = useSetAtom(atomPkName);
   */
-
+  const setToDos = useSetAtom(toDoState);
   const toDos = useAtomValue(toDoSelector);
   const [category, setCategory] = useAtom(categoryState);
 
+  useEffect(() => {
+    const result = sessionStorage.getItem(SessionStorage.TODO_DATA);
+    if (result) {
+      setToDos(JSON.parse(result) as IToDo[]);
+    }
+  }, [setToDos]);
+
   const onChange = (event: React.FormEvent<HTMLSelectElement>) => {
-    setCategory(event.currentTarget.value as any);
+    setCategory(event.currentTarget.value as Categories);
   };
 
   return (

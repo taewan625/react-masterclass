@@ -1,6 +1,6 @@
 import { useAtomValue, useSetAtom } from "jotai";
 import { useForm } from "react-hook-form";
-import { categoryState, toDoState } from "../atoms";
+import { categoryState, SessionStorage, toDoState } from "../atoms";
 
 interface IForm {
   toDo: string;
@@ -14,10 +14,15 @@ function CreateToDo() {
   const { register, handleSubmit, setValue } = useForm<IForm>();
 
   const handleValid = ({ toDo }: IForm) => {
-    setToDos((oldToDos) => [
-      { id: Date.now(), text: toDo, category: category },
-      ...oldToDos,
-    ]);
+    setToDos((toDos) => {
+      const result = [
+        { id: Date.now(), text: toDo, category: category },
+        ...toDos,
+      ];
+      sessionStorage.setItem(SessionStorage.TODO_DATA, JSON.stringify(result));
+      return result;
+    });
+
     setValue("toDo", "");
   };
 
