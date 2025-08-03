@@ -17,6 +17,7 @@ function ToDoList() {
   */
 
   const toDos = useAtomValue(toDoState);
+  console.log(toDos);
 
   return (
     <div>

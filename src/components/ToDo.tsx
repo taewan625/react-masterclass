@@ -1,9 +1,22 @@
-import { IToDo } from "../atoms";
+import { useSetAtom } from "jotai";
+import { IToDo, toDoState } from "../atoms";
 
-function ToDo({ text, category }: IToDo) {
+function ToDo({ id, text, category }: IToDo) {
+  const setToDos = useSetAtom(toDoState);
+
   const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const name = event.currentTarget.name;
-    console.log(name);
+    const {
+      currentTarget: { name },
+    } = event;
+
+    setToDos((oldToDos) => {
+      const targetIndex = oldToDos.findIndex((toDo) => toDo.id === id);
+      const oldToDo = oldToDos[targetIndex];
+      const newTodo = { text, id, category: name };
+
+      return oldToDos;
+      //oldToDos.map((oldToDo: IToDo) => oldToDo.id === id ? { ...oldToDo, category: name } : oldToDo
+    });
   };
 
   return (
