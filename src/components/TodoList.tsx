@@ -1,5 +1,5 @@
 import { useAtomValue } from "jotai";
-import { toDoState } from "../atoms";
+import { toDoSelector, toDoState } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
@@ -16,19 +16,36 @@ function ToDoList() {
   cosnt setFn = useSetAtom(atomPkName);
   */
 
-  const toDos = useAtomValue(toDoState);
-  console.log(toDos);
+  const { to_do, doing, done } = useAtomValue(toDoSelector);
 
   return (
     <div>
       <h1>To Dos</h1>
       <hr />
       <CreateToDo />
+      <h2>TO DO</h2>
       <ul>
-        {toDos.map((toDo) => (
+        {to_do.map((toDo) => (
           <ToDo key={toDo.id} {...toDo} />
         ))}
       </ul>
+      <hr />
+
+      <h2>DOING</h2>
+      <ul>
+        {doing.map((toDo) => (
+          <ToDo key={toDo.id} {...toDo} />
+        ))}
+      </ul>
+      <hr />
+
+      <h2>DONE</h2>
+      <ul>
+        {done.map((toDo) => (
+          <ToDo key={toDo.id} {...toDo} />
+        ))}
+      </ul>
+      <hr />
     </div>
   );
 }
