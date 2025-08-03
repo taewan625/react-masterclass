@@ -1,5 +1,5 @@
 import { useAtom, useAtomValue } from "jotai";
-import { categoryState, IToDo, toDoSelector } from "../atoms";
+import { Categories, categoryState, toDoSelector } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
@@ -20,7 +20,7 @@ function ToDoList() {
   const [category, setCategory] = useAtom(categoryState);
 
   const onChange = (event: React.FormEvent<HTMLSelectElement>) => {
-    setCategory(event.currentTarget.value as IToDo["category"]);
+    setCategory(event.currentTarget.value as any);
   };
 
   return (
@@ -28,9 +28,9 @@ function ToDoList() {
       <h1>To Dos</h1>
       <hr />
       <select value={category} onChange={onChange}>
-        <option value="TO_DO">TO_DO</option>
-        <option value="DOING">DOING</option>
-        <option value="DONE">DONE</option>
+        <option value={Categories.TO_DO}>TO_DO</option>
+        <option value={Categories.DOING}>DOING</option>
+        <option value={Categories.DONE}>DONE</option>
       </select>
       <CreateToDo />
       {toDos?.map((toDo) => (

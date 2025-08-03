@@ -1,6 +1,6 @@
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { useForm } from "react-hook-form";
-import { toDoState } from "../atoms";
+import { categoryState, toDoState } from "../atoms";
 
 interface IForm {
   toDo: string;
@@ -9,11 +9,13 @@ interface IForm {
 function CreateToDo() {
   //set만 필요로 하는 경우
   const setToDos = useSetAtom(toDoState);
+  const category = useAtomValue(categoryState);
+
   const { register, handleSubmit, setValue } = useForm<IForm>();
 
   const handleValid = ({ toDo }: IForm) => {
     setToDos((oldToDos) => [
-      { id: Date.now(), text: toDo, category: "TO_DO" },
+      { id: Date.now(), text: toDo, category: category },
       ...oldToDos,
     ]);
     setValue("toDo", "");

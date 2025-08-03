@@ -1,10 +1,10 @@
 import { useSetAtom } from "jotai";
-import { IToDo, toDoState } from "../atoms";
+import { Categories, IToDo, toDoState } from "../atoms";
 
 function ToDo({ id, text, category }: IToDo) {
   const setToDos = useSetAtom(toDoState);
 
-  const onClick = (name: IToDo["category"]) => {
+  const onClick = (name: Categories) => {
     setToDos((oldToDos) => {
       return oldToDos.map((oldToDo: IToDo) =>
         oldToDo.id === id ? { ...oldToDo, category: name } : oldToDo
@@ -15,14 +15,14 @@ function ToDo({ id, text, category }: IToDo) {
   return (
     <li>
       <span>{text}</span>
-      {category !== "DOING" && (
-        <button onClick={() => onClick("DOING")}>Doing</button>
+      {category !== Categories.DOING && (
+        <button onClick={() => onClick(Categories.DOING)}>Doing</button>
       )}
-      {category !== "TO_DO" && (
-        <button onClick={() => onClick("TO_DO")}>To Do</button>
+      {category !== Categories.TO_DO && (
+        <button onClick={() => onClick(Categories.TO_DO)}>To Do</button>
       )}
-      {category !== "DONE" && (
-        <button onClick={() => onClick("DONE")}>Done</button>
+      {category !== Categories.DONE && (
+        <button onClick={() => onClick(Categories.DONE)}>Done</button>
       )}
     </li>
   );
