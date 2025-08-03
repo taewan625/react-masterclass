@@ -1,5 +1,5 @@
-import { useAtomValue } from "jotai";
-import { toDoSelector, toDoState } from "../atoms";
+import { useAtom, useAtomValue } from "jotai";
+import { categoryState, IToDo, toDoSelector } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
@@ -9,43 +9,33 @@ function ToDoList() {
   const atomPkName = atom<interface>(initvalue);
   
   //get & set
-  const [value, setFn] = useAtom(); 
+  const [value, setFn] = useAtom(atomPkName); 
   
   //get, set 분리
   const value = useAtomValue(atomPkName);
   cosnt setFn = useSetAtom(atomPkName);
   */
 
-  const { to_do, doing, done } = useAtomValue(toDoSelector);
+  const toDos = useAtomValue(toDoSelector);
+  const [category, setCategory] = useAtom(categoryState);
+
+  const onChange = (event: React.FormEvent<HTMLSelectElement>) => {
+    setCategory(event.currentTarget.value as IToDo["category"]);
+  };
 
   return (
     <div>
       <h1>To Dos</h1>
       <hr />
+      <select value={category} onChange={onChange}>
+        <option value="TO_DO">TO_DO</option>
+        <option value="DOING">DOING</option>
+        <option value="DONE">DONE</option>
+      </select>
       <CreateToDo />
-      <h2>TO DO</h2>
-      <ul>
-        {to_do.map((toDo) => (
-          <ToDo key={toDo.id} {...toDo} />
-        ))}
-      </ul>
-      <hr />
-
-      <h2>DOING</h2>
-      <ul>
-        {doing.map((toDo) => (
-          <ToDo key={toDo.id} {...toDo} />
-        ))}
-      </ul>
-      <hr />
-
-      <h2>DONE</h2>
-      <ul>
-        {done.map((toDo) => (
-          <ToDo key={toDo.id} {...toDo} />
-        ))}
-      </ul>
-      <hr />
+      {toDos?.map((toDo) => (
+        <ToDo key={toDo.id} {...toDo} />
+      ))}
     </div>
   );
 }

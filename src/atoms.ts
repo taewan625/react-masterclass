@@ -10,15 +10,15 @@ export interface IToDo {
 //상태 정의
 export const toDoState = atom<IToDo[]>([]);
 
+//상태 정의
+export const categoryState = atom<IToDo["category"]>("TO_DO");
+
 //atom 데이터 가공 제공방법 ps. Recoil의 selector
 export const toDoSelector = atom((get) => {
   //toDoState 주시
   const toDos = get(toDoState);
+  const category = get(categoryState);
 
   //가공한 data 반환
-  return {
-    to_do: toDos.filter((todo) => todo.category === "TO_DO"),
-    doing: toDos.filter((todo) => todo.category === "DOING"),
-    done: toDos.filter((todo) => todo.category === "DONE"),
-  };
+  return toDos.filter((todo) => todo.category === category);
 });
