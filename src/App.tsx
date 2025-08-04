@@ -1,12 +1,16 @@
-import { useAtom, useAtomValue } from "jotai";
+import { useAtom } from "jotai";
 import { hourSelect, minuteState } from "./atoms";
 
 function App() {
   const [minutes, setMinutes] = useAtom<number>(minuteState);
-  const hours = useAtomValue(hourSelect);
+  const [hours, setHours] = useAtom<number>(hourSelect);
 
   const onchange = (event: React.FormEvent<HTMLInputElement>) => {
     setMinutes(+event.currentTarget.value);
+  };
+
+  const onChangeHour = (event: React.FormEvent<HTMLInputElement>) => {
+    setHours(+event.currentTarget.value);
   };
 
   return (
@@ -17,7 +21,12 @@ function App() {
         type="number"
         placeholder="minutes"
       />
-      <input value={hours} type="number" placeholder="hours" readOnly />
+      <input
+        value={hours}
+        onChange={onChangeHour}
+        type="number"
+        placeholder="hours"
+      />
     </div>
   );
 }
