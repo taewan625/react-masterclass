@@ -1,33 +1,24 @@
-import { useAtom } from "jotai";
-import { hourSelect, minuteState } from "./atoms";
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 
 function App() {
-  const [minutes, setMinutes] = useAtom<number>(minuteState);
-  const [hours, setHours] = useAtom<number>(hourSelect);
-
-  const onchange = (event: React.FormEvent<HTMLInputElement>) => {
-    setMinutes(+event.currentTarget.value);
-  };
-
-  const onChangeHour = (event: React.FormEvent<HTMLInputElement>) => {
-    setHours(+event.currentTarget.value);
-  };
-
+  const onDragEnd = () => {};
   return (
-    <div>
-      <input
-        value={minutes}
-        onChange={onchange}
-        type="number"
-        placeholder="minutes"
-      />
-      <input
-        value={hours}
-        onChange={onChangeHour}
-        type="number"
-        placeholder="hours"
-      />
-    </div>
+    <DragDropContext onDragEnd={onDragEnd}>
+      <div>
+        <Droppable droppableId="one">
+          {() => (
+            <ul>
+              <Draggable draggableId="zero" index={0}>
+                {() => <li>0</li>}
+              </Draggable>
+              <Draggable draggableId="one" index={1}>
+                {() => <li>1</li>}
+              </Draggable>
+            </ul>
+          )}
+        </Droppable>
+      </div>
+    </DragDropContext>
   );
 }
 
