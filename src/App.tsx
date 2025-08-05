@@ -46,10 +46,15 @@ function App() {
   const onDragEnd = ({ destination, source }: DropResult) => {
     if (!destination) return;
 
-    const newToDos = [...toDos];
-    const [movedItem] = newToDos.splice(source.index, 1);
-    newToDos.splice(destination.index, 0, movedItem);
-    setToDos(newToDos);
+    setToDos((oldToDos) => {
+      //복제
+      const toDosCopy = [...oldToDos];
+      //메서드 실행 후 제거된 요소 배열 반환
+      const [target] = toDosCopy.splice(source.index, 1);
+      //메서드 실행 후 [] 반환
+      toDosCopy.splice(destination.index, 0, target);
+      return toDosCopy;
+    });
   };
 
   return (
