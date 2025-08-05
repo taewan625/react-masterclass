@@ -1,5 +1,12 @@
-import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import {
+  DragDropContext,
+  Droppable,
+  Draggable,
+  DropResult,
+} from "@hello-pangea/dnd";
+import { useAtom } from "jotai";
 import styled from "styled-components";
+import { toDoState } from "./atoms";
 
 const Wrapper = styled.div`
   display: flex;
@@ -32,10 +39,19 @@ const Card = styled.div`
   background-color: ${(props) => props.theme.cardColor};
 `;
 
-const toDos = ["a", "b", "c", "d", "e", "f"];
-
 function App() {
-  const onDragEnd = () => {};
+  const [toDos, setToDos] = useAtom(toDoState);
+
+  //드레그가 끝날때 동작하는 함수
+  const onDragEnd = ({ destination, source }: DropResult) => {
+    if (!destination) return;
+
+    const newToDos = [...toDos];
+    const [movedItem] = newToDos.splice(source.index, 1);
+    newToDos.splice(destination.index, 0, movedItem);
+    setToDos(newToDos);
+  };
+
   return (
     <DragDropContext onDragEnd={onDragEnd}>
       <Wrapper>
