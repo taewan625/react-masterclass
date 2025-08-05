@@ -1,40 +1,74 @@
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import styled from "styled-components";
+
+const Wrapper = styled.div`
+  display: flex;
+  max-width: 480px;
+  width: 100%;
+  margin: 0 auto;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+`;
+
+const Boards = styled.div`
+  display: grid;
+  width: 100%;
+  grid-template-columns: repeat(1, 1fr);
+`;
+
+const Board = styled.div`
+  padding: 20px 10px;
+  padding-top: 30px;
+  background-color: ${(props) => props.theme.boardColor};
+  border-radius: 5px;
+  min-height: 200px;
+`;
+
+const Card = styled.div`
+  border-radius: 5px;
+  margin-bottom: 5px;
+  padding: 10px 10px;
+  background-color: ${(props) => props.theme.cardColor};
+`;
+
+const toDos = ["a", "b", "c", "d", "e", "f"];
 
 function App() {
   const onDragEnd = () => {};
   return (
     <DragDropContext onDragEnd={onDragEnd}>
-      <div>
-        <Droppable droppableId="one">
-          {(provided) => (
-            //ref: dom 참조 droppableProps: 드래그 가능한 아이템들
-            <ul ref={provided.innerRef} {...provided.droppableProps}>
-              <Draggable draggableId="zero" index={0}>
-                {(provided) => (
-                  <li ref={provided.innerRef} {...provided.draggableProps}>
-                    <span {...provided.dragHandleProps}>👉</span>0
-                  </li>
-                )}
-              </Draggable>
-              <Draggable draggableId="one" index={1}>
-                {(provided) => (
-                  <li
-                    //DOM 직접 참조
-                    ref={provided.innerRef}
-                    //draggable 이벤트 속성 전달
-                    {...provided.draggableProps}
-                  >
-                    {/* 실제 drag 적용 대상 */}
-                    <span {...provided.dragHandleProps}>👉</span>1
-                  </li>
-                )}
-              </Draggable>
-              {/* UI 깨짐 방지 */}
-              {provided.placeholder}
-            </ul>
-          )}
-        </Droppable>
-      </div>
+      <Wrapper>
+        <Boards>
+          <Droppable droppableId="one">
+            {(provided) => (
+              <Board ref={provided.innerRef} {...provided.droppableProps}>
+                {toDos.map((todo, index) => {
+                  return (
+                    <Draggable
+                      key={todo + index}
+                      draggableId={"id" + index}
+                      index={index}
+                    >
+                      {(provided) => (
+                        <Card
+                          ref={provided.innerRef}
+                          {...provided.draggableProps}
+                          {...provided.dragHandleProps}
+                        >
+                          {todo}
+                        </Card>
+                      )}
+                    </Draggable>
+                  );
+                })}
+                {/* UI 깨짐 방지 */}
+                {provided.placeholder}
+              </Board>
+            )}
+          </Droppable>
+        </Boards>
+      </Wrapper>
     </DragDropContext>
   );
 }
