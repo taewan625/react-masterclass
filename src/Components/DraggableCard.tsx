@@ -12,12 +12,12 @@ const Card = styled.div`
 interface IDraggableCardProps {
   index: number;
   todo: string;
+  boardId: string;
 }
 
-function DraggableCard({ todo, index }: IDraggableCardProps) {
-  console.log(todo, "has been");
+function DraggableCard({ todo, index, boardId }: IDraggableCardProps) {
   return (
-    <Draggable key={todo + index} draggableId={"id" + index} index={index}>
+    <Draggable key={todo + index} draggableId={boardId + index} index={index}>
       {(provided) => (
         <Card
           ref={provided.innerRef}
