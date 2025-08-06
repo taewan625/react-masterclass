@@ -4,7 +4,7 @@ import Coins from "./routes/Coins";
 
 function Router() {
   return (
-    <BrowserRouter>
+    <BrowserRouter basename="/react-masterclass/crypto-tracker">
       <Switch>
         {/* params를 가짐을 의미 */}
         <Route path={"/:coinId"}>
