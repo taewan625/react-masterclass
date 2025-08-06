@@ -1,6 +1,9 @@
-import { createGlobalStyle } from "styled-components";
-import Router from "./Router";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { useAtom } from "jotai";
+import { createGlobalStyle, ThemeProvider } from "styled-components";
+import { isDarkAtom } from "./atom";
+import Router from "./Router";
+import { darkTheme, lightTheme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
   html, body, div, span, applet, object, iframe,
@@ -65,11 +68,18 @@ const GlobalStyle = createGlobalStyle`
 `;
 
 function App() {
+  const [isDark, setIsDark] = useAtom(isDarkAtom);
+  const onClick = () => {
+    setIsDark(!isDark);
+  };
   return (
     <>
-      <GlobalStyle />
-      <Router />
-      <ReactQueryDevtools initialIsOpen={true} />
+      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+        <button onClick={onClick}>Toggle Mode</button>
+        <GlobalStyle />
+        <Router />
+        <ReactQueryDevtools initialIsOpen={true} />
+      </ThemeProvider>
     </>
   );
 }

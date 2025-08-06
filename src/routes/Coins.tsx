@@ -19,11 +19,12 @@ const Header = styled.header`
 const CoinList = styled.ul``;
 
 const Coin = styled.li`
-  background-color: white;
-  color: ${(props) => props.theme.bgColor};
+  background-color: ${(props) => props.theme.cardBgColor};
+  color: ${(props) => props.theme.textColor};
   margin-bottom: 10px;
   padding: 20px;
   border-radius: 15px;
+  border: 1px solid white;
   a {
     transition: color 0.2s ease-in-out;
     display: flex;
@@ -63,20 +64,6 @@ interface ICoin {
 }
 
 function Coins() {
-  /**
-    const [coins, setCoins] = useState<ICoin[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-  
-    useEffect(() => {
-      (async () => {
-        const response = await fetch("https://api.coinpaprika.com/v1/coins"); //api응답 기다림
-        const json = await response.json(); //해당 응답의 body 추출 body 추출 작업 자체가 비동기 작업
-        setCoins(json.slice(0, 100));
-        setLoading(false);
-      })();
-    }, []);
-  */
-
   //1. api 통신 상태 (= server 상태)를 효율적이고 자동으로 관리해주는 라이브러리 - 캐싱 기능도 가짐
   const { isLoading, data } = useQuery<ICoin[]>({
     queryKey: ["allCoins"], //고유 key
