@@ -219,7 +219,11 @@ function Coin() {
             </OverviewItem>
             <OverviewItem>
               <span>Price:</span>
-              <span>{tickerData?.quotes.USD.price.toFixed(3)}</span>
+              <span>
+                {tickerData?.quotes?.USD?.price
+                  ? tickerData.quotes.USD.price.toFixed(3)
+                  : "N/A"}
+              </span>
             </OverviewItem>
           </Overview>
           <Description>{infoData?.description}</Description>
