@@ -1,7 +1,23 @@
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { fetchCoinHistory } from "../api";
-import ApexChart from "react-apexcharts";
+
+import styled from "styled-components";
+
+const Card = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgba(0, 0, 0, 0.5);
+  padding: 10px 20px;
+  border-radius: 10px;
+`;
+
+const CardWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+`;
 
 interface Ihistorical {
   close: string;
@@ -20,7 +36,7 @@ function Price() {
   const { isLoading, data } = useQuery<Ihistorical[]>({
     queryKey: ["chart", coinId],
     queryFn: () => fetchCoinHistory(coinId),
-    refetchInterval: 10000,
+    //refetchInterval: 10000,
   });
 
   return (
@@ -28,44 +44,20 @@ function Price() {
       {isLoading ? (
         <div>isloading</div>
       ) : (
-        <ApexChart
-          type="candlestick"
-          series={[
-            {
-              data:
-                data?.map((coin) => {
-                  return {
-                    x: coin.time_close,
-                    y: [coin.open, coin.high, coin.low, coin.close],
-                  };
-                }) ?? [],
-            },
-          ]}
-          options={{
-            theme: { mode: "dark" },
-            chart: {
-              height: 500,
-              width: 500,
-              toolbar: { show: false },
-              background: "transparent",
-            },
-            grid: { show: false },
-            stroke: { curve: "smooth", width: 3 },
-            yaxis: { show: false },
-            xaxis: {
-              labels: { show: false },
-              axisTicks: { show: false },
-              type: "datetime",
-              categories: data?.map((price) => price.time_close) ?? [],
-            },
-            fill: {
-              type: "gradient",
-              gradient: { gradientToColors: ["red"], stops: [0, 100] },
-            },
-            colors: ["blue"],
-            tooltip: { y: { formatter: (value) => `$${value.toFixed(2)}` } },
-          }}
-        />
+        <CardWrapper>
+          <Card>
+            <span>Now Highest Price</span>
+            <span>
+              {data ? Math.max(...data.map((data1) => +data1.high)) : "N/A"}
+            </span>
+          </Card>
+          <Card>
+            <span>Now Lowest Price</span>
+            <span>
+              {data ? Math.min(...data.map((data1) => +data1.high)) : "N/A"}
+            </span>
+          </Card>
+        </CardWrapper>
       )}
     </>
   );

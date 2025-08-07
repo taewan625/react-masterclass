@@ -11,7 +11,6 @@ import Price from "./Price";
 import Chart from "./Chart";
 import { useQuery } from "@tanstack/react-query";
 import { fetchCoinInfo, fetchCoinTickers } from "../api";
-import { Helmet } from "react-helmet";
 
 const Container = styled.div`
   padding: 0 10px;
@@ -162,20 +161,6 @@ function Coin() {
   const priceMatch = useRouteMatch("/:coinId/price");
   const chartMatch = useRouteMatch("/:coinId/chart");
 
-  // const [info, setInfo] = useState<InfoData>();
-  // const [priceInfo, setPriceInfo] = useState<PriceData>();
-  // const [loading, setLoading] = useState<boolean>(true);
-
-  // useEffect(() => {
-  //   (async () => {
-  //     const infoData = await (await fetch(`https://api.coinpaprika.com/v1/coins/${coinId}`)).json();
-  //     const priceData = await (await fetch(`https://api.coinpaprika.com/v1/tickers/${coinId}`)).json();
-  //     setInfo(infoData);
-  //     setPriceInfo(priceData);
-  //     setLoading(false);
-  //   })();
-  // }, [coinId]);
-
   const { isLoading: infoLoading, data: infoData } = useQuery<InfoData>({
     queryKey: ["info", coinId],
     queryFn: () => fetchCoinInfo(coinId),
@@ -183,18 +168,13 @@ function Coin() {
   const { isLoading: tickerLoading, data: tickerData } = useQuery<PriceData>({
     queryKey: ["tickers", coinId], //pk
     queryFn: () => fetchCoinTickers(coinId), //데이터 조회 함수
-    refetchInterval: 500000, //자동 재조회
+    //refetchInterval: 500000, //자동 재조회
   });
 
   const loading = infoLoading || tickerLoading;
 
   return (
     <Container>
-      <Helmet>
-        <title>
-          {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
-        </title>
-      </Helmet>
       <Header>
         {/* 값을 외부에서 받을 경우 ?.을 사용하는 습관이 있음 */}
         <Title>
@@ -202,7 +182,9 @@ function Coin() {
         </Title>
         {/* Link: 단순 URL 이동, Route: 실제 이동한 경로랑 매핑된 거 렌더링
         ps) switch 없으면 매핑된 url router 모두 렌더링 있으면 1st만 렌더링  */}
-        <Link to={"/"}>home</Link>
+        <button>
+          <Link to={"/"}>←</Link>
+        </button>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>
