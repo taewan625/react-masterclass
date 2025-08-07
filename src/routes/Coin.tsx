@@ -20,7 +20,7 @@ const Container = styled.div`
 
 const Header = styled.header`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
   padding: 10px 0;
 `;
@@ -175,6 +175,9 @@ function Coin() {
 
   return (
     <Container>
+      <button>
+        <Link to={"/"}> &lArr;</Link>
+      </button>
       <Header>
         {/* 값을 외부에서 받을 경우 ?.을 사용하는 습관이 있음 */}
         <Title>
@@ -182,9 +185,6 @@ function Coin() {
         </Title>
         {/* Link: 단순 URL 이동, Route: 실제 이동한 경로랑 매핑된 거 렌더링
         ps) switch 없으면 매핑된 url router 모두 렌더링 있으면 1st만 렌더링  */}
-        <button>
-          <Link to={"/"}>←</Link>
-        </button>
       </Header>
       {loading ? (
         <Loader>Loading...</Loader>

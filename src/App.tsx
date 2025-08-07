@@ -1,6 +1,6 @@
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { useAtom } from "jotai";
-import { createGlobalStyle, ThemeProvider } from "styled-components";
+import styled, { createGlobalStyle, ThemeProvider } from "styled-components";
 import { isDarkAtom } from "./atom";
 import Router from "./Router";
 import { darkTheme, lightTheme } from "./theme";
@@ -62,20 +62,39 @@ a {
 }
 `;
 
+const Button = styled.button`
+  position: fixed;
+  bottom: 100px;
+  right: 50px;
+  z-index: 1000;
+  background-color: ${(props) => props.theme.toggleColor};
+  color: ${(props) => props.theme.textColor};
+  font-size: large;
+  cursor: pointer;
+  padding: 20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 40px;
+
+  border: none;
+  outline: none;
+
+  /* 테두리 효과를 box-shadow로 부드럽게 대체 */
+  box-shadow: 0 0 0 2px ${(props) => props.theme.toggleColor};
+`;
+
 function App() {
   const [isDark, setIsDark] = useAtom(isDarkAtom);
   const onClick = () => {
     setIsDark(!isDark);
   };
   return (
-    <>
-      <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
-        <button onClick={onClick}>Toggle Mode</button>
-        <GlobalStyle />
-        <Router />
-        <ReactQueryDevtools initialIsOpen={true} />
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={isDark ? darkTheme : lightTheme}>
+      <Button onClick={onClick}>{isDark ? "Dark" : "Light"}</Button>
+      <GlobalStyle />
+      <Router />
+      <ReactQueryDevtools initialIsOpen={true} />
+    </ThemeProvider>
   );
 }
 
