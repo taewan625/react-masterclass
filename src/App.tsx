@@ -33,8 +33,7 @@ footer, header, hgroup, menu, nav, section {
 	display: block;
 }
 body {
-	line-height: 1.2;
-  font-family: 'Source Sans Pro', sans-serif;
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   background-color: ${(props) => props.theme.bgColor};
   color: ${(props) => props.theme.textColor};
   font-weight: 300;
