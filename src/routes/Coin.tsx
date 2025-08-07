@@ -23,6 +23,7 @@ const Header = styled.header`
   justify-content: center;
   align-items: center;
   padding: 10px 0;
+  position: relative;
 `;
 
 const Title = styled.h1`
@@ -79,6 +80,30 @@ const Tab = styled.span<{ isActive: boolean }>`
   a {
     display: block;
   }
+`;
+
+const ButtonLink = styled(Link)`
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  top: 10;
+  right: 0;
+  z-index: 1000;
+  background-color: ${(props) => props.theme.toggleColor};
+  color: ${(props) => props.theme.textColor};
+  font-size: large;
+  cursor: pointer;
+  padding: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+
+  border: none;
+  outline: none;
+
+  /* 테두리 효과를 box-shadow로 부드럽게 대체 */
+  box-shadow: 0 0 0 2px ${(props) => props.theme.toggleColor};
 `;
 
 interface RouteParams {
@@ -175,14 +200,12 @@ function Coin() {
 
   return (
     <Container>
-      <button>
-        <Link to={"/"}> &lArr;</Link>
-      </button>
       <Header>
         {/* 값을 외부에서 받을 경우 ?.을 사용하는 습관이 있음 */}
         <Title>
           {state?.name ? state.name : loading ? "Loading..." : infoData?.name}
         </Title>
+        <ButtonLink to={"/"}> &lArr;</ButtonLink>
         {/* Link: 단순 URL 이동, Route: 실제 이동한 경로랑 매핑된 거 렌더링
         ps) switch 없으면 매핑된 url router 모두 렌더링 있으면 1st만 렌더링  */}
       </Header>
