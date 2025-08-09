@@ -8,6 +8,8 @@ const Wrapper = styled.div`
   background-color: ${(props) => props.theme.boardColor};
   border-radius: 5px;
   min-height: 200px;
+  display: flex;
+  flex-direction: column;
 `;
 
 const Title = styled.h2`
@@ -15,6 +17,23 @@ const Title = styled.h2`
   font-weight: 600;
   margin-bottom: 10px;
   font-size: 18px;
+`;
+
+interface IAreaProps {
+  isDraggingOver: boolean;
+  isDraggingFromThisWith: boolean;
+}
+
+const getBackgroundColor = (props: IAreaProps) => {
+  if (props.isDraggingOver) return "red";
+  if (props.isDraggingFromThisWith) return "blue";
+  return "pink";
+};
+
+const Area = styled.div<IAreaProps>`
+  background-color: ${(props) => getBackgroundColor(props)};
+  flex-grow: 1;
+  transition: background-color 0.3s ease-in-out;
 `;
 
 interface IBoardProps {
@@ -29,9 +48,10 @@ function Board({ toDos, boardId }: IBoardProps) {
 
       <Droppable droppableId={boardId}>
         {/* proviede: @hello-pangea/dnd 라이브러리가 내부에서 넘겨주는 매개변수 객체 */}
-        {(provided) => (
-          <div
-            style={{ backgroundColor: "red" }}
+        {(provided, snapshot) => (
+          <Area
+            isDraggingOver={snapshot.isDraggingOver}
+            isDraggingFromThisWith={Boolean(snapshot.draggingFromThisWith)}
             ref={provided.innerRef}
             {...provided.droppableProps}
           >
@@ -45,7 +65,7 @@ function Board({ toDos, boardId }: IBoardProps) {
             ))}
             {/* UI 깨짐 방지 */}
             {provided.placeholder}
-          </div>
+          </Area>
         )}
       </Droppable>
     </Wrapper>
