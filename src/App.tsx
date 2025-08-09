@@ -40,6 +40,22 @@ function App() {
         return { ...allBoards, [source.droppableId]: boardCopy };
       });
     }
+    //다른 boards로 이동
+    else {
+      setToDos((allBoards) => {
+        const startBoard = [...allBoards[source.droppableId]];
+        const [target] = startBoard.splice(source.index, 1);
+
+        const endBoard = [...allBoards[destination.droppableId]];
+        endBoard.splice(destination.index, 0, target);
+
+        return {
+          ...allBoards,
+          [source.droppableId]: startBoard,
+          [destination.droppableId]: endBoard,
+        };
+      });
+    }
   };
 
   return (

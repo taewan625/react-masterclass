@@ -24,25 +24,31 @@ interface IBoardProps {
 
 function Board({ toDos, boardId }: IBoardProps) {
   return (
-    <Droppable droppableId={boardId}>
-      {(provided) => (
-        <Wrapper ref={provided.innerRef}>
-          <Title>{boardId}</Title>
-          {toDos.map((todo, index) => {
-            return (
+    <Wrapper>
+      <Title>{boardId}</Title>
+
+      <Droppable droppableId={boardId}>
+        {/* proviede: @hello-pangea/dnd 라이브러리가 내부에서 넘겨주는 매개변수 객체 */}
+        {(provided) => (
+          <div
+            style={{ backgroundColor: "red" }}
+            ref={provided.innerRef}
+            {...provided.droppableProps}
+          >
+            {toDos.map((todo, index) => (
               <DraggableCard
                 key={index}
                 todo={todo}
                 index={index}
                 boardId={boardId}
               />
-            );
-          })}
-          {/* UI 깨짐 방지 */}
-          {provided.placeholder}
-        </Wrapper>
-      )}
-    </Droppable>
+            ))}
+            {/* UI 깨짐 방지 */}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
+    </Wrapper>
   );
 }
 
