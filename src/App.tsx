@@ -25,15 +25,21 @@ function App() {
   const [toDos, setToDos] = useAtom(toDoState);
 
   //드레그가 끝날때 동작하는 함수
-  const onDragEnd = ({ destination, source }: DropResult) => {
+  const onDragEnd = (info: DropResult) => {
+    console.log(info);
+    const { destination, draggableId, source } = info;
     if (!destination) return;
 
-    /* setToDos((oldToDos) => {
-      const toDosCopy = [...oldToDos];
-      const [target] = toDosCopy.splice(source.index, 1);
-      toDosCopy.splice(destination.index, 0, target);
-      return toDosCopy;
-    }); */
+    // 동일한 boards
+    if (destination.droppableId === source.droppableId) {
+      setToDos((allBoards) => {
+        const boardCopy = [...allBoards[source.droppableId]];
+        const [target] = boardCopy.splice(source.index, 1);
+        boardCopy.splice(destination.index, 0, target);
+
+        return { ...allBoards, [source.droppableId]: boardCopy };
+      });
+    }
   };
 
   return (

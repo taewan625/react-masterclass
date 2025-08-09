@@ -10,6 +10,13 @@ const Wrapper = styled.div`
   min-height: 200px;
 `;
 
+const Title = styled.h2`
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 10px;
+  font-size: 18px;
+`;
+
 interface IBoardProps {
   toDos: string[];
   boardId: string;
@@ -19,7 +26,8 @@ function Board({ toDos, boardId }: IBoardProps) {
   return (
     <Droppable droppableId={boardId}>
       {(provided) => (
-        <Wrapper ref={provided.innerRef} {...provided.droppableProps}>
+        <Wrapper ref={provided.innerRef}>
+          <Title>{boardId}</Title>
           {toDos.map((todo, index) => {
             return (
               <DraggableCard
