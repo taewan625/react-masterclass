@@ -1,73 +1,26 @@
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { useAtom } from "jotai";
 import styled from "styled-components";
-import { toDoState } from "./atoms";
-import Board from "./Components/Board";
 
 const Wrapper = styled.div`
+  height: 100vh;
+  width: 100vw;
   display: flex;
-  max-width: 480px;
-  width: 100%;
-  margin: 0 auto;
   justify-content: center;
   align-items: center;
-  height: 100vh;
 `;
 
-const Boards = styled.div`
-  display: grid;
-  width: 100%;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
+const Box = styled.div`
+  width: 200px;
+  height: 200px;
+  background-color: white;
+  border-radius: 10px;
+  box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1), 0 10px 20px rgba(0, 0, 0, 0.06);
 `;
 
 function App() {
-  const [toDos, setToDos] = useAtom(toDoState);
-
-  //드레그가 끝날때 동작하는 함수
-  const onDragEnd = (info: DropResult) => {
-    console.log(info);
-    const { destination, source } = info;
-    if (!destination) return;
-
-    // 동일한 boards
-    if (destination.droppableId === source.droppableId) {
-      setToDos((allBoards) => {
-        const boardCopy = [...allBoards[source.droppableId]];
-        const [target] = boardCopy.splice(source.index, 1);
-        boardCopy.splice(destination.index, 0, target);
-
-        return { ...allBoards, [source.droppableId]: boardCopy };
-      });
-    }
-    //다른 boards로 이동
-    else {
-      setToDos((allBoards) => {
-        const startBoard = [...allBoards[source.droppableId]];
-        const [target] = startBoard.splice(source.index, 1);
-
-        const endBoard = [...allBoards[destination.droppableId]];
-        endBoard.splice(destination.index, 0, target);
-
-        return {
-          ...allBoards,
-          [source.droppableId]: startBoard,
-          [destination.droppableId]: endBoard,
-        };
-      });
-    }
-  };
-
   return (
-    <DragDropContext onDragEnd={onDragEnd}>
-      <Wrapper>
-        <Boards>
-          {Object.keys(toDos).map((boardId, index) => (
-            <Board key={index} boardId={boardId} toDos={toDos[boardId]} />
-          ))}
-        </Boards>
-      </Wrapper>
-    </DragDropContext>
+    <Wrapper>
+      <Box />
+    </Wrapper>
   );
 }
 
