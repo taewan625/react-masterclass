@@ -57,7 +57,7 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     line-height: 1.2;
-    background:linear-gradient(135deg,#e09,#d0e);
+    background:linear-gradient(135deg,#484848,#080108);
   }
   a {
     text-decoration: none;
