@@ -2,11 +2,14 @@ import { Draggable } from "@hello-pangea/dnd";
 import React from "react";
 import styled from "styled-components";
 
-const Card = styled.div`
+const Card = styled.div<{ isDragging: boolean }>`
   border-radius: 5px;
   margin-bottom: 5px;
   padding: 10px 10px;
-  background-color: ${(props) => props.theme.cardColor};
+  background-color: ${(props) =>
+    props.isDragging ? "tomato" : props.theme.cardColor};
+  box-shadow: ${(props) =>
+    props.isDragging ? "0px 2px 5px rgba(0,0,0,1)" : "none"};
 `;
 
 interface IDraggableCardProps {
@@ -18,8 +21,9 @@ interface IDraggableCardProps {
 function DraggableCard({ todo, index, boardId }: IDraggableCardProps) {
   return (
     <Draggable key={todo + index} draggableId={boardId + index} index={index}>
-      {(provided) => (
+      {(provided, snapshot) => (
         <Card
+          isDragging={snapshot.isDragging}
           ref={provided.innerRef}
           {...provided.draggableProps}
           {...provided.dragHandleProps}
