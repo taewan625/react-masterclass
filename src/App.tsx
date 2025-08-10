@@ -27,7 +27,7 @@ function App() {
   //드레그가 끝날때 동작하는 함수
   const onDragEnd = (info: DropResult) => {
     console.log(info);
-    const { destination, draggableId, source } = info;
+    const { destination, source } = info;
     if (!destination) return;
 
     // 동일한 boards
