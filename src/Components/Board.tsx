@@ -2,7 +2,8 @@ import { useForm } from "react-hook-form";
 import { Droppable } from "@hello-pangea/dnd";
 import DraggableCard from "./DraggableCard";
 import styled from "styled-components";
-import { ITodo } from "../atoms";
+import { ITodo, toDoState } from "../atoms";
+import { useSetAtom } from "jotai";
 
 const Wrapper = styled.div`
   padding: 20px 10px;
@@ -48,13 +49,27 @@ interface IBoardProps {
 }
 
 interface IForm {
-  toDo: string;
+  addToDo: string;
 }
 
 function Board({ toDos, boardId }: IBoardProps) {
+  const setToDo = useSetAtom(toDoState);
+
   const { register, setValue, handleSubmit } = useForm<IForm>();
-  const onValid = ({ toDo }: IForm) => {
-    setValue("toDo", "");
+
+  const onValid = ({ addToDo }: IForm) => {
+    const newToDo = {
+      id: Date.now(),
+      text: addToDo,
+    };
+    setToDo((allToDos) => {
+      return {
+        ...allToDos,
+        [boardId]: [...allToDos[boardId], newToDo],
+      };
+    });
+
+    setValue("addToDo", "");
   };
 
   return (
@@ -62,7 +77,7 @@ function Board({ toDos, boardId }: IBoardProps) {
       <Title>{boardId}</Title>
       <Form onSubmit={handleSubmit(onValid)}>
         <input
-          {...register("toDo", { required: true })}
+          {...register("addToDo", { required: true })}
           type="text"
           placeholder={`Add Task on ${boardId}`}
         />

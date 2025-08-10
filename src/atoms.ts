@@ -11,7 +11,10 @@ interface IToDoState {
 }
 
 export const toDoState = atom<IToDoState>({
-  todo: [],
+  todo: [
+    { id: 1, text: "hello1" },
+    { id: 2, text: "hello2" },
+  ],
   doing: [],
   done: [],
 });
