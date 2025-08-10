@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import App from "./App";
 import { createGlobalStyle, ThemeProvider } from "styled-components";
-import { darkTheme } from "./theme";
+import { theme } from "./theme";
 
 const GlobalStyle = createGlobalStyle`
   html, body, div, span, applet, object, iframe,
@@ -57,7 +57,6 @@ const GlobalStyle = createGlobalStyle`
   }
   body {
     line-height: 1.2;
-    background:linear-gradient(135deg,#484848,#080108);
   }
   a {
     text-decoration: none;
@@ -70,7 +69,7 @@ const root = ReactDOM.createRoot(
 );
 root.render(
   <React.StrictMode>
-    <ThemeProvider theme={darkTheme}>
+    <ThemeProvider theme={theme}>
       <GlobalStyle />
       <App />
     </ThemeProvider>
