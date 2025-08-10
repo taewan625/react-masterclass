@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { motion } from "motion/react";
 
 const Wrapper = styled.div`
   height: 100vh;
@@ -20,6 +21,8 @@ function App() {
   return (
     <Wrapper>
       <Box />
+      {/* 애니메이션 사용법 */}
+      <motion.div></motion.div>
     </Wrapper>
   );
 }
