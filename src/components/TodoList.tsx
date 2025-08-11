@@ -1,19 +1,19 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
+import { useEffect } from "react";
 import {
   categoryState,
-  IToDo,
   selectedCategoryState,
   SessionStorage,
   toDoSelector,
   toDoState,
 } from "../atoms";
+import CreateCategory from "./CreateCategory";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
-import { useEffect } from "react";
-import CreateCategory from "./CreateCategory";
 
 function ToDoList() {
   const setToDos = useSetAtom(toDoState);
+  const setCategories = useSetAtom(categoryState);
   const [selectedCategory, setSelectedCategory] = useAtom(
     selectedCategoryState
   );
@@ -22,12 +22,17 @@ function ToDoList() {
   const categories = useAtomValue(categoryState);
 
   useEffect(() => {
-    const result = sessionStorage.getItem(SessionStorage.TODO_DATA);
+    const todos = sessionStorage.getItem(SessionStorage.TODO_DATA);
+    const categories = sessionStorage.getItem(SessionStorage.CATEGORY_DATA);
 
-    if (result) {
-      setToDos(JSON.parse(result) as IToDo[]);
+    if (todos) {
+      setToDos(JSON.parse(todos));
     }
-  }, [setToDos]);
+
+    if (categories) {
+      setCategories(JSON.parse(categories));
+    }
+  }, [setToDos, setCategories]);
 
   const onChange = (event: React.FormEvent<HTMLSelectElement>) => {
     setSelectedCategory(event.currentTarget.value);
