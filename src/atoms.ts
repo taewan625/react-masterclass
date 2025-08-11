@@ -2,37 +2,37 @@ import { atom } from "jotai";
 
 export enum SessionStorage {
   "TODO_DATA" = "TODO_DATA",
+  "CATEGORY_DATA" = "CATEGORY_DATA",
 }
 
-//type Categories = "DOING" | "TO_DO" | "DONE";
-
-//type 보다 더 명확함. defaul value = number index
-export enum Categories {
-  "TO_DO" = "TO_DO",
-  "DOING" = "DOING",
-  "DONE" = "DONE",
-  "DELETE" = "DELETE",
+export interface ICategories {
+  id: number;
+  type: string;
 }
 
 export interface IToDo {
   id: number;
   text: string;
-  //string에서 특정 문자열만 가능하도록 제약
-  category: Categories;
+  category: string;
 }
 
-//상태 정의
+//할일 목록
 export const toDoState = atom<IToDo[]>([]);
 
-//상태 정의
-export const categoryState = atom<Categories>(Categories.TO_DO);
+//카테고리 목록
+export const categoryState = atom<ICategories[]>([
+  { id: 1, type: "to do" },
+  { id: 2, type: "doing" },
+  { id: 3, type: "done" },
+]);
 
-//atom 데이터 가공 제공방법 ps. Recoil의 selector
+//선택된 카테고리 (default: "to do")
+export const selectedCategoryState = atom<string>("to do");
+
+//selector
 export const toDoSelector = atom((get) => {
-  //toDoState 주시
   const toDos = get(toDoState);
-  const category = get(categoryState);
+  const selectedCategory = get(selectedCategoryState);
 
-  //가공한 data 반환
-  return toDos.filter((todo) => todo.category === category);
+  return toDos.filter((todo) => todo.category === selectedCategory);
 });

@@ -1,8 +1,8 @@
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import {
-  Categories,
   categoryState,
   IToDo,
+  selectedCategoryState,
   SessionStorage,
   toDoSelector,
   toDoState,
@@ -10,44 +10,50 @@ import {
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 import { useEffect } from "react";
+import CreateCategory from "./CreateCategory";
 
 function ToDoList() {
-  /* jotai atom function 정리
-  //초기화
-  const atomPkName = atom<interface>(initvalue);
-  
-  //get & set
-  const [value, setFn] = useAtom(atomPkName); 
-  
-  //get, set 분리
-  const value = useAtomValue(atomPkName);
-  cosnt setFn = useSetAtom(atomPkName);
-  */
   const setToDos = useSetAtom(toDoState);
+  const [selectedCategory, setSelectedCategory] = useAtom(
+    selectedCategoryState
+  );
+
   const toDos = useAtomValue(toDoSelector);
-  const [category, setCategory] = useAtom(categoryState);
+  const categories = useAtomValue(categoryState);
 
   useEffect(() => {
     const result = sessionStorage.getItem(SessionStorage.TODO_DATA);
+
     if (result) {
       setToDos(JSON.parse(result) as IToDo[]);
     }
   }, [setToDos]);
 
   const onChange = (event: React.FormEvent<HTMLSelectElement>) => {
-    setCategory(event.currentTarget.value as Categories);
+    setSelectedCategory(event.currentTarget.value);
   };
 
   return (
     <div>
       <h1>To Dos</h1>
+      <p>
+        ps. I use SessionStorage. when browser tab close data also remove
+        together.
+      </p>
       <hr />
-      <select value={category} onChange={onChange}>
-        <option value={Categories.TO_DO}>TO_DO</option>
-        <option value={Categories.DOING}>DOING</option>
-        <option value={Categories.DONE}>DONE</option>
+
+      <CreateCategory />
+
+      <select value={selectedCategory} onChange={onChange}>
+        {categories.map((category) => (
+          <option key={category.id} value={category.type}>
+            {category.type}
+          </option>
+        ))}
       </select>
+
       <CreateToDo />
+
       {toDos?.map((toDo) => (
         <ToDo key={toDo.id} {...toDo} />
       ))}

@@ -1,11 +1,19 @@
-import { useSetAtom } from "jotai";
-import { Categories, IToDo, SessionStorage, toDoState } from "../atoms";
+import { useAtomValue, useSetAtom } from "jotai";
+import {
+  categoryState,
+  IToDo,
+  selectedCategoryState,
+  SessionStorage,
+  toDoState,
+} from "../atoms";
 
-function ToDo({ id, text, category }: IToDo) {
+function ToDo({ id, text }: IToDo) {
   const setToDos = useSetAtom(toDoState);
+  const selectedCategory = useAtomValue(selectedCategoryState);
+  const categories = useAtomValue(categoryState);
 
   //카테고리 update
-  const updateToDo = (toDos: IToDo[], name: Categories) => {
+  const updateToDo = (toDos: IToDo[], name: string) => {
     return toDos.map((toDo) =>
       toDo.id === id ? { ...toDo, category: name } : toDo
     );
@@ -21,12 +29,10 @@ function ToDo({ id, text, category }: IToDo) {
     sessionStorage.setItem(SessionStorage.TODO_DATA, JSON.stringify(toDos));
   };
 
-  const onClick = (name: Categories) => {
+  const onClick = (type: string) => {
     setToDos((toDos) => {
       const result =
-        Categories.DELETE === name
-          ? deleteToDo(toDos)
-          : updateToDo(toDos, name);
+        type === "delete" ? deleteToDo(toDos) : updateToDo(toDos, type);
 
       setSessionStorage(result);
       return result;
@@ -36,64 +42,16 @@ function ToDo({ id, text, category }: IToDo) {
   return (
     <li>
       <span>{text}</span>
-      {category !== Categories.DOING && (
-        <button onClick={() => onClick(Categories.DOING)}>Doing</button>
-      )}
-      {category !== Categories.TO_DO && (
-        <button onClick={() => onClick(Categories.TO_DO)}>To Do</button>
-      )}
-      {category !== Categories.DONE && (
-        <button onClick={() => onClick(Categories.DONE)}>Done</button>
-      )}
-      <button onClick={() => onClick(Categories.DELETE)}>X</button>
+      {categories.map((category, index) => {
+        return category.type !== selectedCategory ? (
+          <button key={index} onClick={() => onClick(category.type)}>
+            {category.type}
+          </button>
+        ) : null;
+      })}
+      <button onClick={() => onClick("delete")}>X</button>
     </li>
   );
 }
 
 export default ToDo;
-
-/* name 형식 todo category 변경 단점: 타입 체크가 불안정 As로 type 추정 강제함.
-import { useSetAtom } from "jotai";
-import { IToDo, toDoState } from "../atoms";
-
-function ToDo({ id, text, category }: IToDo) {
-  const setToDos = useSetAtom(toDoState);
-
-  const onClick = (event: React.MouseEvent<HTMLButtonElement>) => {
-    const {
-      currentTarget: { name },
-    } = event;
-
-    setToDos((oldToDos) => {
-      return oldToDos.map((oldToDo: IToDo) =>
-        oldToDo.id === id
-          ? { ...oldToDo, category: name as IToDo["category"] }
-          : oldToDo
-      );
-    });
-  };
-
-  return (
-    <li>
-      <span>{text}</span>
-      {category !== "DOING" && (
-        <button name="DOING" onClick={onClick}>
-          Doing
-        </button>
-      )}
-      {category !== "TO_DO" && (
-        <button name="TO_DO" onClick={onClick}>
-          To Do
-        </button>
-      )}
-      {category !== "DONE" && (
-        <button name="DONE" onClick={onClick}>
-          Done
-        </button>
-      )}
-    </li>
-  );
-}
-
-export default ToDo;
- */
