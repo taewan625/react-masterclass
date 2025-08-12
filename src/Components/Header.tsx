@@ -1,7 +1,7 @@
 import styled from "styled-components";
-import { animate, motion, useAnimation, useScroll } from "motion/react";
+import { motion, useScroll, useTransform } from "motion/react";
 import { Link, useRouteMatch } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -101,38 +101,21 @@ const logoVariants = {
   },
 };
 
-const navVariants = {
-  top: {
-    backgroundColor: "rgba(0,0,0,0)",
-  },
-  scroll: {
-    backgroundColor: "rgba(0,0,0,1)",
-  },
-};
-
 function Header() {
   const homeMatch = useRouteMatch("/");
   const tvMatch = useRouteMatch("/tv");
   const { scrollY } = useScroll();
-  //animation 트리거 방법 (잘 안씀) - props로 animate말고 다른 걸 하는 방법이라고 생각하면 됨.
-  const inputAnimation = useAnimation();
-  const navAnimation = useAnimation();
+  const navBg = useTransform(
+    scrollY,
+    [0, 80, 81],
+    ["rgba(0,0,0,0)", "rgba(0,0,0,1)", "rgba(0,0,0,0)"]
+  );
 
   const [searchOpen, setSearchOpen] = useState(false);
-
-  const toggleSearch = () => {
-    inputAnimation.start({ scaleX: searchOpen ? 0 : 1 });
-    setSearchOpen((prev) => !prev);
-  };
-
-  useEffect(() => {
-    scrollY.on("change", () =>
-      navAnimation.start(80 < scrollY.get() ? "top" : "scroll")
-    );
-  }, [scrollY, navAnimation]);
+  const toggleSearch = () => setSearchOpen((prev) => !prev);
 
   return (
-    <Nav variants={navVariants} initial={"top"} animate={navAnimation}>
+    <Nav style={{ backgroundColor: navBg }}>
       <Col>
         <Logo
           variants={logoVariants}
@@ -175,7 +158,7 @@ function Header() {
             ></path>
           </motion.svg>
           <Input
-            animate={inputAnimation}
+            animate={{ scaleX: searchOpen ? 1 : 0 }}
             initial={{ scaleX: 0 }}
             transition={{ ease: "linear" }}
             placeholder="search for movie or tv show"
