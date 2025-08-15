@@ -64,11 +64,30 @@ const Button = styled(motion.button)`
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 `;
 
+const boxVariants = {
+  whileHover: (box: IBox) => ({
+    scale: 1.1,
+    transformOrigin: box.origin,
+  }),
+};
+
+const overlayVariant = {
+  initial: { backgroundColor: "rgba(0,0,0,0)" },
+  animate: { backgroundColor: "rgba(0,0,0,0.4)" },
+  exit: { backgroundColor: "rgba(0,0,0,0)" },
+};
+
+interface IBox {
+  id: string;
+  origin: string;
+  hasCircle: boolean;
+}
+
 function App() {
   const [id, setId] = useState<null | string>(null);
   const [isSwitch, setIsSwitch] = useState(true);
 
-  const boxList = [
+  const boxList: IBox[] = [
     { id: "1", origin: "100% 100%", hasCircle: false },
     { id: "2", origin: "0% 100%", hasCircle: isSwitch },
     { id: "3", origin: "100% 0%", hasCircle: !isSwitch },
@@ -78,12 +97,14 @@ function App() {
   return (
     <Wrapper>
       <Grid>
-        {boxList.map((box) => (
+        {boxList.map((box: IBox) => (
           <Box
             onClick={() => setId(box.id)}
             key={box.id}
             layoutId={box.id}
-            whileHover={{ scale: 1.1, transformOrigin: box.origin }}
+            variants={boxVariants}
+            whileHover="whileHover"
+            custom={box} //variants에 props 전달 방법
             style={{ transformOrigin: box.origin }}
           >
             {box.hasCircle && <Circle layoutId="circle" />}
@@ -92,9 +113,8 @@ function App() {
       </Grid>
 
       <Button
-        whileHover={{ scale: 1.1, transition: { duration: 0.5 } }}
-        whileTap={{ color: "orange" }}
-        style={{ transition: "color 0.5s" }}
+        whileTap={{ color: "orange", scale: 1.1 }}
+        style={{ transition: "color 0.2s" }}
         onClick={() => setIsSwitch((prev) => !prev)}
       >
         Switch
@@ -104,9 +124,10 @@ function App() {
         {id ? (
           <Overlay
             onClick={() => setId(null)}
-            initial={{ backgroundColor: "rgba(0,0,0,0)" }}
-            animate={{ backgroundColor: "rgba(0,0,0,0.4)" }}
-            exit={{ backgroundColor: "rgba(0,0,0,0)" }}
+            variants={overlayVariant}
+            initial="initial"
+            animate="animate"
+            exit="exit"
           >
             <Modal layoutId={id} />
           </Overlay>
