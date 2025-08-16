@@ -40,6 +40,7 @@ const OverView = styled.p`
 const Slider = styled.div`
   position: relative;
   top: -100px;
+  height: 100vh;
 `;
 
 const Row = styled(motion.div)`
@@ -56,6 +57,12 @@ const Box = styled(motion.div)<{ $bgPhoto: string }>`
   background-image: url(${(props) => props.$bgPhoto});
   background-size: cover;
   background-position: center center;
+  &:first-child {
+    transform-origin: center left;
+  }
+  &:last-child {
+    transform-origin: center right;
+  }
 `;
 
 const rowVariants = {
@@ -123,6 +130,12 @@ function Home() {
                   .map((movie) => (
                     <Box
                       key={movie.id}
+                      whileHover={{
+                        scale: 1.2,
+                        y: -50,
+                        transition: { type: "tween", delay: 0.3 },
+                      }}
+                      transition={{ type: "tween" }}
                       $bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                     />
                   ))}
