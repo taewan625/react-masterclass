@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import { getMovies, IGetMoviesResult } from "../api";
 import styled from "styled-components";
 import { makeImagePath } from "../utils";
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, Variants } from "motion/react";
 import { useState } from "react";
 
 const Wrapper = styled.div`
@@ -65,6 +65,19 @@ const Box = styled(motion.div)<{ $bgPhoto: string }>`
   }
 `;
 
+const Info = styled(motion.div)`
+  padding: 10px;
+  background-color: ${(props) => props.theme.black.lighter};
+  opacity: 0;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  h4 {
+    text-align: center;
+    font-size: 18px;
+  }
+`;
+
 const rowVariants = {
   hidden: {
     x: window.innerWidth + 5,
@@ -74,6 +87,32 @@ const rowVariants = {
   },
   exit: {
     x: -window.innerWidth - 5,
+  },
+};
+
+const boxVariants: Variants = {
+  normal: {
+    scale: 1,
+  },
+  hover: {
+    scale: 1.3,
+    y: -50,
+    transition: {
+      delay: 0.5,
+      duration: 0.3,
+      type: "tween",
+    },
+  },
+};
+
+const infoVariants: Variants = {
+  hover: {
+    opacity: 1,
+    transition: {
+      delay: 0.5,
+      duration: 0.1,
+      type: "tween",
+    },
   },
 };
 
@@ -130,14 +169,17 @@ function Home() {
                   .map((movie) => (
                     <Box
                       key={movie.id}
-                      whileHover={{
-                        scale: 1.2,
-                        y: -50,
-                        transition: { type: "tween", delay: 0.3 },
-                      }}
+                      whileHover="hover"
+                      initial="normal"
+                      variants={boxVariants}
                       transition={{ type: "tween" }}
                       $bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
-                    />
+                    >
+                      {/* variants로 해야지 상위 variants가 상속이 된다. */}
+                      <Info variants={infoVariants}>
+                        <h4>{movie.title}</h4>
+                      </Info>
+                    </Box>
                   ))}
               </Row>
             </AnimatePresence>
